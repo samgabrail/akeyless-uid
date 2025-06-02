@@ -262,10 +262,10 @@ graph TD
     A --> C["🚀 Staging Token<br/>TTL: 240 min<br/>(4 hours)"]
     A --> D["🔒 Production Token<br/>TTL: 60 min<br/>(1 hour)"]
     
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#ffebee
+    style A fill:#0277bd,stroke:#01579b,stroke-width:2px,color:#ffffff
+    style B fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#ffffff
+    style C fill:#f57c00,stroke:#e65100,stroke-width:2px,color:#ffffff
+    style D fill:#c62828,stroke:#b71c1c,stroke-width:2px,color:#ffffff
 ```
 
 #### Service-Based Hierarchy
@@ -285,10 +285,10 @@ graph TD
     A --> C["🌐 API Service<br/>TTL: 30 min<br/>(Shortest Exposure)"]
     A --> D["⚙️ Worker Service<br/>TTL: 120 min<br/>(Long-running Tasks)"]
     
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#ffebee
-    style D fill:#f3e5f5
+    style A fill:#0277bd,stroke:#01579b,stroke-width:2px,color:#ffffff
+    style B fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#ffffff
+    style C fill:#c62828,stroke:#b71c1c,stroke-width:2px,color:#ffffff
+    style D fill:#6a1b9a,stroke:#4a148c,stroke-width:2px,color:#ffffff
 ```
 
 ### Access Controls and Revocation Scenarios
