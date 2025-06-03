@@ -14,7 +14,8 @@ sequenceDiagram
     Note over A,S: Initial Setup (One-time)
     A->>S: 1. Create UID Auth Method
     S->>A: 2. SaaS ACK
-    A->>AS: 3. Generate initial UID token & provision
+    A->>S: 3. Generate initial UID token
+    S->>A: 3b. Return UID token
     
     Note over P,AS: Deployment (Per Service)
     A->>P: Hand off tokens

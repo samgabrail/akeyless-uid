@@ -11,6 +11,16 @@ echo ""
 echo "🔑 Key Point: Platform Engineer bridges Admin and Application Service"
 echo ""
 
+# Check for platform engineer credentials
+if [ -z "$AKEYLESS_ACCESS_ID" ] || [ -z "$AKEYLESS_ACCESS_KEY" ]; then
+    echo "❌ Platform Engineer credentials required:"
+    echo "   export AKEYLESS_ACCESS_ID=\"your-admin-access-id\""
+    echo "   export AKEYLESS_ACCESS_KEY=\"your-admin-access-key\""
+    echo ""
+    echo "💡 Platform Engineer typically uses admin-level credentials for deployment"
+    exit 1
+fi
+
 # Check if admin has provisioned tokens
 ADMIN_TOKEN_FILE="./tokens/client-tokens"
 
@@ -30,6 +40,19 @@ echo "✅ Platform Engineer received from admin:"
 echo "   - UID Token: ${UID_TOKEN:0:20}..."
 echo "   - Access ID: $ACCESS_ID"
 echo "   - Auth Method: $AUTH_METHOD"
+echo ""
+
+# Configure Platform Engineer CLI with admin credentials
+echo "🔐 Configuring Platform Engineer CLI with admin credentials..."
+akeyless configure --access-id "$AKEYLESS_ACCESS_ID" --access-key "$AKEYLESS_ACCESS_KEY" --gateway-url "${AKEYLESS_GATEWAY:-https://api.akeyless.io}"
+
+# Test Platform Engineer authentication
+echo "🧪 Testing Platform Engineer authentication..."
+if ! akeyless auth --access-id "$AKEYLESS_ACCESS_ID" --access-key "$AKEYLESS_ACCESS_KEY" > /dev/null 2>&1; then
+    echo "❌ Platform Engineer authentication failed"
+    exit 1
+fi
+echo "✅ Platform Engineer authentication successful"
 echo ""
 
 # Step 1: Platform Engineer deploys token to application service
