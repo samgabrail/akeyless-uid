@@ -61,6 +61,21 @@ Hands-on scenarios demonstrating:
 
 ### Running the Demo
 
+**NEW: Realistic Workflow (Recommended)**
+
+1. **Admin Setup** (Steps 1-3 from diagram)
+   ```bash
+   cd demo
+   ./scripts/admin-setup.sh
+   ```
+
+2. **Client Operations** (Steps 4-9 from diagram)
+   ```bash
+   ./scenarios/client-workflow.sh
+   ```
+
+**LEGACY: All-in-One (Educational)**
+
 1. **Setup Demo Environment**
    ```bash
    cd demo
