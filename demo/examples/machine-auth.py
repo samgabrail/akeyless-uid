@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 # Get the directory where this script is located
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # Token file is in the parent directory's tokens folder
-DEFAULT_TOKEN_FILE = os.path.join(SCRIPT_DIR, "..", "tokens", "demo-tokens")
+DEFAULT_TOKEN_FILE = os.path.join(SCRIPT_DIR, "..", "tokens", "application-service-token")
 
 class AkeylessClient:
     """

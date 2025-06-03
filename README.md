@@ -22,10 +22,10 @@ This repository contains a complete demo and content package showcasing **Akeyle
 ### 1. Interactive Demo (`/demo/`)
 A comprehensive demonstration of secretless Universal Identity token management:
 
-- **Basic Workflow**: UID token generation → T-token authentication → Secret access
+- **Three-Persona Workflow**: Admin → Platform Engineer → Application Service
 - **Token Rotation**: Automatic rotation with TTL reset
 - **Hierarchical Tokens**: Parent-child token relationships
-- **Real-world Examples**: Python/Node.js integration patterns
+- **Real-world Examples**: Python integration patterns
 
 For **Windows Setup**, see the [official Akeyless documentation](https://docs.akeyless.io/docs/setting-up-universal-identity-for-windows-machines).
 
@@ -42,8 +42,7 @@ A detailed 2000+ word article covering:
 ### 3. Demo Scenarios (`demo/scenarios/`)
 Hands-on scenarios demonstrating:
 
-- **Basic Workflow** (`basic-workflow.sh`): Core UID → T-token operations
-- **Token Rotation** (`token-rotation.sh`): Automated rotation examples
+- **Client Workflow** (`client-workflow.sh`): Complete application service workflow with token rotation (Steps 4-9)
 - **Child Tokens** (`child-tokens.sh`): Hierarchical token management
 
 ## 🚀 Quick Start
@@ -61,7 +60,22 @@ Hands-on scenarios demonstrating:
 
 ### Running the Demo
 
-**NEW: Realistic Workflow (Recommended)**
+**Using start.sh (Recommended)**
+
+1. **Run the interactive demo**:
+   ```bash
+   ./start.sh
+   ```
+   
+   The interactive script provides:
+   - **🎯 Complete Workflow**: Runs all three personas automatically
+   - **🎭 Individual Steps**: Choose specific personas to run
+   - **🐍 Python Integration**: Real-world secretless authentication example
+   - **📊 Status Tracking**: See which steps are complete
+   - **⚠️ Prerequisites Check**: Validates environment setup
+   - **🔄 Smart Skipping**: Avoids re-running completed steps
+
+**Manual Three-Persona Workflow**
 
 1. **Admin Setup** (Steps 1-3 from diagram)
    ```bash
@@ -69,32 +83,20 @@ Hands-on scenarios demonstrating:
    ./scripts/admin-setup.sh
    ```
 
-2. **Client Operations** (Steps 4-9 from diagram)
+2. **Platform Engineer Deployment**
+   ```bash
+   ./scripts/platform-deploy.sh
+   ```
+
+3. **Application Service Operations** (Steps 4-9 from diagram)
    ```bash
    ./scenarios/client-workflow.sh
    ```
 
-**LEGACY: All-in-One (Educational)**
-
-1. **Setup Demo Environment**
-   ```bash
-   cd demo
-   ./scripts/setup-demo-environment.sh
-   ```
-
-2. **Try Basic Workflow**
-   ```bash
-   ./scenarios/basic-workflow.sh
-   ```
-
-3. **Explore Token Rotation**
-   ```bash
-   ./scenarios/token-rotation.sh
-   ```
-
-4. **Test Hierarchical Management**
+4. **Explore Advanced Features**
    ```bash
    ./scenarios/child-tokens.sh
+   python3 ./examples/machine-auth.py
    ```
 
 ## 🏗️ Demo Architecture
@@ -102,18 +104,22 @@ Hands-on scenarios demonstrating:
 ```
 demo/
 ├── scenarios/
-│   ├── basic-workflow.sh          # Core UID token operations
-│   ├── token-rotation.sh          # Token rotation examples  
-│   └── child-tokens.sh            # Hierarchical token management
+│   ├── client-workflow.sh          # 🚀 Application Service workflow with rotation (Steps 4-9)
+│   └── child-tokens.sh             # Hierarchical token management
 ├── scripts/
-│   ├── setup-demo-environment.sh  # Initialize demo with Akeyless
-│   ├── simple-rotate-token.sh     # Simple rotation (Akeyless aligned)
-│   └── auto-rotate-token.sh       # Enterprise rotation with full features
+│   ├── admin-setup.sh              # 🧑‍💼 Admin setup (Steps 1-3)
+│   ├── platform-deploy.sh          # 👷 Platform Engineer deployment
+│   ├── application-service-rotate.sh # Automated rotation for application services
+│   └── (rotation scripts removed - using application-service-rotate.sh)
+├── tokens/
+│   ├── client-tokens               # 🧑‍💼 Admin-generated tokens
+│   └── application-service-token   # 👷 Platform Engineer deployed tokens
+├── logs/
+│   └── rotation.log                # Automated rotation logging
 ├── examples/
-│   ├── machine-auth.py            # Python example using UID tokens
-│   ├── service-auth.js            # Node.js service authentication  
-│   └── rotation-workflow.yaml     # K8s CronJob for token rotation
-└── README.md                      # Demo documentation
+│   └── machine-auth.py             # 🐍 Python secretless authentication example
+├── start.sh                        # 🚀 Interactive demo entry point
+└── README.md                       # Demo documentation
 ```
 
 **Windows Integration**: For complete Windows machine setup, see the [official Akeyless documentation](https://docs.akeyless.io/docs/setting-up-universal-identity-for-windows-machines).
@@ -272,9 +278,12 @@ function Get-AkeylessToken {
 
 ### Demo Components
 - **Blog Post**: `blog-post.md` - Complete technical article on secretless non-human identity
-- **Basic Workflow**: `demo/scenarios/basic-workflow.sh` - Core operations
-- **Token Rotation**: `demo/scenarios/token-rotation.sh` - Automated rotation
+- **Demo Entry Point**: `start.sh` - Interactive three-persona workflow
+- **Admin Setup**: `demo/scripts/admin-setup.sh` - Initial setup (Steps 1-3)
+- **Platform Deploy**: `demo/scripts/platform-deploy.sh` - Service deployment
+- **Client Workflow**: `demo/scenarios/client-workflow.sh` - Application service operations (Steps 4-9)
 - **Child Tokens**: `demo/scenarios/child-tokens.sh` - Hierarchical management
+- **Python Integration**: `demo/examples/machine-auth.py` - Real-world secretless authentication
 - **Windows Guide**: [Official Akeyless Documentation](https://docs.akeyless.io/docs/setting-up-universal-identity-for-windows-machines) - Windows integration
 
 ### Support
@@ -286,7 +295,7 @@ function Get-AkeylessToken {
 
 Ready to revolutionize your non-human identity management with secretless architecture?
 
-1. **Start with the demo**: `./scripts/setup-demo-environment.sh`
+1. **Start with the demo**: `./start.sh` (guided three-persona workflow)
 2. **Read the blog post**: Comprehensive background and implementation guidance
 3. **Try the examples**: Integrate with your technology stack
 4. **Plan your rollout**: Use the phased deployment approach

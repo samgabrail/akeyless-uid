@@ -72,25 +72,20 @@ echo ""
 # Step 2: Platform Engineer sets up automated rotation
 echo "⚙️ Step 2: Platform Engineer configures automated rotation..."
 
-# Create a token file that simple-rotate-token.sh can use
-APPLICATION_SERVICE_TOKEN_ONLY_FILE="./tokens/application-service-uid-token"
-echo "$UID_TOKEN" > "$APPLICATION_SERVICE_TOKEN_ONLY_FILE"
-chmod 600 "$APPLICATION_SERVICE_TOKEN_ONLY_FILE"
-
-echo "✅ Application Service UID token file created: $APPLICATION_SERVICE_TOKEN_ONLY_FILE"
-echo "✅ Using existing simple-rotate-token.sh script for rotation"
+echo "✅ Using application-service-rotate.sh script for rotation"
+echo "✅ Rotation will use existing application-service-token file"
 echo ""
 
 # Step 3: Platform Engineer sets up cron job (simulation)
 echo "📅 Step 3: Platform Engineer configures hourly rotation schedule..."
 
-# Create cron job template using the working simple-rotate-token.sh
+# Create cron job template using the working application-service-rotate.sh
 cat > ./scripts/application-service-cron.txt << EOF
 # Akeyless Universal Identity - Application Service Token Rotation
 # Installed by Platform Engineer on $(date)
-# Runs every hour to rotate UID token using simple-rotate-token.sh
+# Runs every hour to rotate UID token using application-service-rotate.sh
 
-0 * * * * cd $(pwd) && ./scripts/simple-rotate-token.sh rotate $APPLICATION_SERVICE_TOKEN_ONLY_FILE
+0 * * * * cd $(pwd) && ./scripts/application-service-rotate.sh
 EOF
 
 echo "✅ Cron job template created: ./scripts/application-service-cron.txt"
@@ -116,13 +111,6 @@ else
     echo "❌ Application Service authentication test failed"
     exit 1
 fi
-
-# Test rotation script using the working simple-rotate-token.sh
-echo "Testing rotation script using simple-rotate-token.sh..."
-echo "⚠️  Note: Skipping rotation test due to CLI version compatibility issues"
-echo "⚠️  The simple-rotate-token.sh script is properly configured and will work in production"
-echo "⚠️  Manual testing can be done with: ./scripts/simple-rotate-token.sh rotate [token-file]"
-echo "✅ Application Service rotation script deployment successful"
 
 echo ""
 echo "🎉 PLATFORM ENGINEER DEPLOYMENT COMPLETE!"
