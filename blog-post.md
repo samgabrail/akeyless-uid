@@ -498,12 +498,14 @@ Run our interactive demo to experience the complete workflow:
 ./start.sh
 ```
 
-**Choose Your Demo Path:**
-- 🎯 **Complete Three-Persona Workflow** (Recommended for first-time users)
-- 🎭 **Individual Persona Steps** (Learn specific roles)
-- 🔄 **Advanced Features** (Token rotation, hierarchical management)
-- 🐍 **Python Integration** (Real-world secretless authentication)
-- 📊 **Status Tracking** (Monitor workflow progress)
+**Interactive Demo Experience**: Run `./start.sh` and choose from 7 options:
+- **🧑‍💼 Admin Setup**: Initial environment and token generation
+- **👷 Platform Engineer Deployment**: Deploy tokens to application services
+- **🚀 Application Service Operations**: Autonomous operations with rotation
+- **🌳 Hierarchical Token Management**: Parent-child token relationships
+- **🐍 Python Integration**: Real-world secretless authentication
+- **📊 Show Workflow Status**: Monitor current workflow state
+- **🚪 Exit**: Complete demo session
 
 ### Demo Environment Setup
 
@@ -869,12 +871,14 @@ The future of non-human identity is dynamic, hierarchical, automated, and secret
 **Learn more**: Explore our [implementation examples](demo/examples/) for your technology stack  
 **Get started**: Contact the Akeyless team to discuss your non-human identity security requirements
 
-**Interactive Demo Experience**: Run `./start.sh` and choose from:
-- 🎯 **Complete Workflow**: Automated three-persona progression
-- 🎭 **Individual Steps**: Learn specific personas
-- 📊 **Status Tracking**: Monitor workflow progress
-- 🔄 **Advanced Features**: Token rotation and hierarchical management
-- 🐍 **Python Integration**: Real-world secretless authentication example
+**Interactive Demo Experience**: Run `./start.sh` and choose from 7 options:
+- **🧑‍💼 Admin Setup**: Initial environment and token generation
+- **👷 Platform Engineer Deployment**: Deploy tokens to application services
+- **🚀 Application Service Operations**: Autonomous operations with rotation
+- **🌳 Hierarchical Token Management**: Parent-child token relationships
+- **🐍 Python Integration**: Real-world secretless authentication
+- **📊 Show Workflow Status**: Monitor current workflow state
+- **🚪 Exit**: Complete demo session
 
 Non-human identity management is evolving toward secretless architecture. The question isn't whether to modernize—it's how quickly you can begin strengthening security and eliminating security gaps.
 

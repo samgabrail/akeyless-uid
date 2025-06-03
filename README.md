@@ -68,36 +68,21 @@ Hands-on scenarios demonstrating:
    ```
    
    The interactive script provides:
-   - **🎯 Complete Workflow**: Runs all three personas automatically
-   - **🎭 Individual Steps**: Choose specific personas to run
-   - **🐍 Python Integration**: Real-world secretless authentication example
-   - **📊 Status Tracking**: See which steps are complete
+   - **🎭 Persona Steps**: Choose specific personas (Admin, Platform Engineer, Application Service)
+   - **🔄 Advanced Features**: Hierarchical token management and Python integration
+   - **📊 Status Tracking**: Real-time workflow progress monitoring
    - **⚠️ Prerequisites Check**: Validates environment setup
-   - **🔄 Smart Skipping**: Avoids re-running completed steps
+   - **🔄 Smart Workflow Management**: Dependency checking and progress tracking
+   - **🌈 Color-coded Interface**: Easy-to-follow visual experience
 
-**Manual Three-Persona Workflow**
-
-1. **Admin Setup** (Steps 1-3 from diagram)
-   ```bash
-   cd demo
-   ./scripts/admin-setup.sh
-   ```
-
-2. **Platform Engineer Deployment**
-   ```bash
-   ./scripts/platform-deploy.sh
-   ```
-
-3. **Application Service Operations** (Steps 4-9 from diagram)
-   ```bash
-   ./scenarios/client-workflow.sh
-   ```
-
-4. **Explore Advanced Features**
-   ```bash
-   ./scenarios/child-tokens.sh
-   python3 ./examples/machine-auth.py
-   ```
+**7 Menu Options:**
+1. **🧑‍💼 Admin Setup** - Initial environment and token generation (Steps 1-3)
+2. **👷 Platform Engineer Deployment** - Deploy tokens to application services
+3. **🚀 Application Service Operations** - Autonomous operations with token rotation (Steps 4-9)
+4. **🌳 Hierarchical Token Management** - Parent-child token relationships
+5. **🐍 Python Integration Example** - Real-world secretless authentication
+6. **📊 Show Workflow Status** - Monitor current workflow state
+7. **🚪 Exit** - Complete demo session
 
 ## 🏗️ Demo Architecture
 

@@ -46,19 +46,21 @@ sequenceDiagram
 ```
 
 The interactive script provides:
-- **🎯 Complete Three-Persona Workflow**: Automated progression through all personas
-- **🎭 Individual Persona Selection**: Choose specific steps to run
-- **🐍 Python Integration Example**: Real-world secretless authentication demo
+- **🎭 Persona Steps**: Choose specific personas to run (Admin, Platform Engineer, Application Service)
+- **🔄 Advanced Features**: Hierarchical token management and Python integration
 - **📊 Real-time Status Tracking**: See which components are complete
-- **⚠️ Prerequisites Validation**: Checks environment variables
+- **⚠️ Prerequisites Check**: Validates environment setup
 - **🔄 Smart Workflow Management**: Skips completed steps, enforces dependencies
 - **🌈 Color-coded Interface**: Easy-to-follow visual experience
 
-**Menu Options:**
-1. **Complete Workflow** (Recommended for first-time users)
-2. **Individual Steps** (For learning specific personas)
-3. **Advanced Features** (Token rotation, hierarchical management, Python integration)
-4. **Status Monitoring** (Check current workflow state)
+**7 Menu Options:**
+1. **🧑‍💼 Admin Setup (Steps 1-3)** - Initial environment and token generation
+2. **👷 Platform Engineer Deployment** - Deploy tokens to application services
+3. **🚀 Application Service Operations (Steps 4-9)** - Autonomous operations with rotation
+4. **🌳 Hierarchical Token Management** - Parent-child token relationships
+5. **🐍 Python Integration Example** - Real-world secretless authentication
+6. **📊 Show Workflow Status** - Monitor current workflow state  
+7. **🚪 Exit** - Complete demo session
 
 ### 🧑‍💼 Admin Persona (Steps 1-3)
 ```bash

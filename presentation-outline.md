@@ -118,12 +118,14 @@ sequenceDiagram
 ./start.sh
 ```
 
-**Choose Your Learning Path:**
-- 🎯 **Complete Workflow** (Recommended for first-time users)
-- 🎭 **Individual Personas** (Learn specific roles)
-- 🔄 **Advanced Features** (Token rotation, hierarchical management)
-- 🐍 **Python Integration** (Real-world secretless authentication)
-- 📊 **Status Tracking** (Monitor workflow progress)
+**Choose Your Learning Path (7 Options):**
+- **🧑‍💼 Admin Setup** - Initial environment and token generation (Steps 1-3)
+- **👷 Platform Engineer Deployment** - Deploy tokens to application services
+- **🚀 Application Service Operations** - Autonomous operations with rotation (Steps 4-9)
+- **🌳 Hierarchical Token Management** - Parent-child token relationships
+- **🐍 Python Integration Example** - Real-world secretless authentication
+- **📊 Show Workflow Status** - Monitor current workflow state
+- **🚪 Exit** - Complete demo session
 
 **Smart Features:**
 - Prerequisites validation
