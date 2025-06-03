@@ -118,7 +118,7 @@ The Scale: An estimated 70% of enterprise workloads still run in these cloud env
 - **Environment Variables**: Static secrets in container/VM configuration
 - **Manual Distribution**: Human users copying credentials
 
-The Problem: All these approaches just move the secret zero problem - they don't solve it. You still need to securely provide that initial shared secret, creating security gaps and access management challenges.
+The Problem: All these approaches just moved the secret zero problem - they don't solve it. You still need to securely provide that initial shared secret, creating security gaps and access management challenges.
 
 ### How Universal Identity Solves Secret Zero
 
@@ -552,15 +552,20 @@ sequenceDiagram
     AS->>AS: Manage hierarchical service identity
 ```
 
-### Scenario 1: Complete Three-Persona Workflow
+### Interactive Demo Summary
 
-**The Challenge**: How does a new application service establish identity and access sensitive data without static credentials while following realistic organizational roles?
+**Getting Started**: Simply run `./start.sh` and choose your learning path:
 
-**Interactive Demo Path**: Choose **Option 1: Complete Three-Persona Workflow** from `./start.sh` menu
+**Current 7 Menu Options:**
 
-**What You'll Experience**:
+### Scenario 1: Admin Setup (Option 1)
 
-**🧑‍💼 Admin Persona (Steps 1-3)** - Run: `./scripts/admin-setup.sh`
+**The Challenge**: How does an admin establish the Universal Identity infrastructure for non-human authentication?
+
+**Interactive Demo Path**: Choose **Option 1: 🧑‍💼 Admin Setup** from `./start.sh` menu
+
+**What You'll Experience** - Runs: `./scripts/admin-setup.sh`
+
 1. **UID Authentication Method Creation**: 
    ```bash
    akeyless auth-method create universal-identity \
@@ -584,15 +589,33 @@ sequenceDiagram
    - Creates `./tokens/client-tokens` file for Platform Engineer
    - Secure handoff of initial credentials
 
-**👷 Platform Engineer Persona (Deployment)** - Run: `./scripts/platform-deploy.sh`
-4. **Service Deployment**:
+**Demo Outcome**: Admin infrastructure ready for Platform Engineer deployment.
+
+### Scenario 2: Platform Engineer Deployment (Option 2)
+
+**The Challenge**: How does a Platform Engineer deploy admin-generated tokens to application services?
+
+**Interactive Demo Path**: Choose **Option 2: 👷 Platform Engineer Deployment** from `./start.sh` menu
+
+**What You'll Experience** - Runs: `./scripts/platform-deploy.sh`
+
+1. **Service Deployment**:
    - Deploys admin-generated tokens to application services
    - Creates `./tokens/application-service-token` for autonomous operations
    - Sets up automated rotation infrastructure with `application-service-rotate.sh`
    - Configures cron job template for hourly rotation
 
-**🚀 Application Service Persona (Steps 4-9)** - Run: `./scenarios/client-workflow.sh` (includes automatic token rotation)
-5. **UID → T-Token Exchange**:
+**Demo Outcome**: Application service is provisioned and ready for autonomous operations.
+
+### Scenario 3: Application Service Operations (Option 3)
+
+**The Challenge**: How does an application service operate autonomously with self-rotating credentials?
+
+**Interactive Demo Path**: Choose **Option 3: 🚀 Application Service Operations** from `./start.sh` menu
+
+**What You'll Experience** - Runs: `./scenarios/client-workflow.sh` (includes automatic token rotation)
+
+1. **UID → T-Token Exchange**:
    ```bash
    akeyless auth --access-id "$ACCESS_ID" \
                  --access-type universal_identity \
@@ -602,7 +625,7 @@ sequenceDiagram
    - Best practice: separation of identity vs. operations
    - No static credentials stored anywhere
 
-6. **Database Secret Retrieval**:
+2. **Database Secret Retrieval**:
    ```bash
    akeyless get-secret-value --name "/demo/database-config" \
                              --token "$T_TOKEN"
@@ -611,7 +634,7 @@ sequenceDiagram
    - Retrieves real database configuration JSON
    - Demonstrates end-to-end secretless application authentication
 
-7. **Self-Rotation Process**:
+3. **Self-Rotation Process**:
    ```bash
    akeyless uid-rotate-token --uid-token "$UID_TOKEN"
    ```
@@ -620,49 +643,20 @@ sequenceDiagram
    - New token issued with reset TTL
    - Automatic update of stored credentials in token file
 
-8. **Validation of New Token**:
+4. **Validation of New Token**:
    - Authenticate with new token successfully
    - Demonstrate old token is rejected
    - Show seamless operation continuity
 
-**Demo Outcome**: A complete non-human identity authentication flow with realistic persona separation and zero static credentials hardcoded anywhere in the system.
+**Demo Outcome**: Complete application service autonomous workflow with built-in token rotation.
 
-### Scenario 2: Token Rotation Demo
+### Scenario 4: Hierarchical Token Management (Option 4)
 
-**The Challenge**: How do application services maintain security with automatic credential lifecycle management?
+**The Challenge**: How do you organize non-human identity access across microservices with proper security controls?
 
-**Interactive Demo Path**: Choose **Option 6: Token Rotation Demo** from `./start.sh` menu
+**Interactive Demo Path**: Choose **Option 4: 🌳 Hierarchical Token Management** from `./start.sh` menu
 
-**What You'll Experience** - Run: `./scenarios/client-workflow.sh` (includes automatic token rotation)
-
-1. **Current Token Status**:
-   - View token tree structure and TTL information
-   - See expiration times (60-minute default TTL)
-   - Understand the limited exposure window
-
-2. **Self-Rotation Process**:
-   ```bash
-   akeyless uid-rotate-token --uid-token "$CURRENT_TOKEN"
-   ```
-   - Zero human intervention required
-   - Old token immediately invalidated
-   - New token issued with reset TTL
-   - Automatic update of stored credentials
-
-3. **Validation of New Token**:
-   - Authenticate with new token successfully
-   - Demonstrate old token is rejected (401 errors)
-   - Show seamless operation continuity
-
-**Demo Outcome**: Application services can self-manage their credentials automatically, eliminating the operational overhead of manual rotation while maintaining robust security measures.
-
-### Scenario 3: Hierarchical Token Management
-
-**The Challenge**: How do you organize non-human identity access across microservices, containers, and service components with proper security controls?
-
-**Interactive Demo Path**: Choose **Option 7: Hierarchical Token Management** from `./start.sh` menu
-
-**What You'll Experience** - Run: `./scenarios/child-tokens.sh`
+**What You'll Experience** - Runs: `./scenarios/child-tokens.sh`
 
 1. **Parent-Child Token Creation for Microservices**:
    ```bash
@@ -688,29 +682,20 @@ sequenceDiagram
    akeyless uid-revoke-token --revoke-token "$DATABASE_SERVICE_TOKEN" \
                              --revoke-type revokeSelf \
                              --auth-method-name "$AUTH_METHOD"
-   
-   # Revoke entire service tree
-   akeyless uid-revoke-token --revoke-token "$PARENT_TOKEN" \
-                             --revoke-type revokeAll \
-                             --auth-method-name "$AUTH_METHOD"
    ```
    - Targeted revocation vs. cascading revocation
    - Emergency response capabilities for microservices
    - Precise access controls for container environments
 
-**Demo Outcome**: Application services can be organized hierarchically to match your microservice architecture, providing both flexibility and control while preventing unauthorized access.
+**Demo Outcome**: Hierarchical microservice organization with granular control capabilities.
 
-### Scenario 4: Python Integration Example
+### Scenario 5: Python Integration Example (Option 5)
 
 **The Challenge**: How does Universal Identity integrate into real-world applications and programming languages?
 
-**Interactive Demo Path**: Choose **Option 8: Python Integration Example** from `./start.sh` menu
+**Interactive Demo Path**: Choose **Option 5: 🐍 Python Integration Example** from `./start.sh` menu
 
-**What You'll Experience** - Run: `python3 ./examples/machine-auth.py`
-
-Beyond the CLI demonstrations, our demo includes a complete Python application showing how non-human identity integrates into real applications and microservice architectures.
-
-**What You'll See**:
+**What You'll Experience** - Runs: `python3 ./examples/machine-auth.py`
 
 1. **Secretless Python Application Service**:
    ```python
@@ -745,45 +730,19 @@ Beyond the CLI demonstrations, our demo includes a complete Python application s
    child_token = client.create_child_token(ttl_minutes=30)
    ```
 
-**Key Insights from Python Demo**:
-- **No Static Credentials**: Application service code contains zero hardcoded secrets
-- **Transparent Operation**: Developers don't need to manage token lifecycle
-- **Production Ready**: Complete error handling and logging
-- **Language Agnostic**: Same patterns work in Java, Node.js, Go, etc.
-
 **Demo Outcome**: Real-world integration patterns that developers can immediately implement in their applications.
 
-### Interactive Demo Summary
+### Status Monitoring (Option 6)
 
-**Getting Started**: Simply run `./start.sh` and choose your learning path:
+**Interactive Demo Path**: Choose **Option 6: 📊 Show Workflow Status** from `./start.sh` menu
 
-1. **🎯 Complete Workflow** (Recommended): Experience all personas automatically
-2. **🎭 Individual Scenarios**: Focus on specific aspects:
-   - Admin setup and token generation
-   - Platform Engineer deployment and automation
-   - Application Service autonomous operations  
-   - Token rotation demonstrations
-   - Hierarchical management
-   - Python integration
+**What You'll Experience**:
+- Real-time status of workflow completion
+- Prerequisites validation
+- Dependency checking
+- Current token file status
 
-**Demo Architecture and Real-World Applicability**:
-
-1. **Microservice Environment Simulation**: While using CLI for clarity, the token management patterns directly apply to containerized microservices that lack native identity
-2. **Container/Kubernetes Ready**: Same UID token approach works in containerized environments
-3. **Legacy System Compatible**: Physical servers and traditional infrastructure can use identical patterns
-4. **CI/CD Integration**: Pipeline authentication follows the same UID → T-token flow
-5. **Production Ready**: Python example shows real application integration
-
-**Key Demo Takeaways**:
-
-1. **Secret Zero Elimination**: No pre-shared secrets required for application service establishment
-2. **Microservice Ready**: Solutions work in environments without native identity (like containerized applications)
-3. **Operational Excellence**: Zero human intervention after initial setup
-4. **Enterprise Scale**: Hierarchical management supports microservice complexity
-5. **Developer Friendly**: Simple integration patterns for any programming language
-6. **Interactive Learning**: Menu-driven experience lets you explore at your own pace
-
-The interactive demo proves that non-human identity management doesn't have to choose between security and simplicity—Universal Identity delivers both while strengthening security posture through realistic persona separation that matches real organizational workflows.
+**Demo Outcome**: Clear visibility into workflow progress and component readiness.
 
 ## Frequently Asked Questions
 
@@ -853,23 +812,15 @@ The shift toward secretless Universal Identity represents broader industry trend
 
 ## Conclusion
 
-Non-human identity management doesn't have to be a choice between security and operational simplicity. Akeyless Universal Identity provides a sophisticated yet practical secretless solution that scales from simple microservices to complex enterprise security environments while addressing unique security challenges.
+While cloud-native platforms like AWS, GCP, Azure, and Kubernetes have solved non-human identity with built-in solutions (IAM roles, managed identities, service accounts), **70% of enterprise workloads still run in environments that lack these capabilities**: VMware VMs, physical servers, on-premises systems, and legacy infrastructure. Universal Identity provides the elegant solution for this critical gap, bringing secretless architecture to any environment through automatic token rotation that solves the fundamental secret zero problem.
 
-**Key takeaways:**
+Instead of trying to eliminate secret zero entirely, Universal Identity minimizes it to a single, self-managing credential that automatically rotates every 60 minutes. This transforms the bootstrap challenge from "how do we securely distribute static credentials" to "how do we provide one initial token that manages itself forever." The result: applications in non-cloud environments gain the same secretless capabilities as cloud-native applications, without requiring platform-specific identity services.
 
-- UID tokens enable secretless architecture through automatic rotation and proper lifecycle management
-- Hierarchical token structures enable organized access controls that reflects your infrastructure  
-- The UID → T-token pattern provides optimal performance and security for secretless operations
-- Production deployment is achievable through phased rollout and proper monitoring
-- Robust security measures protect against cyber threats and data breaches
-
-The future of non-human identity is dynamic, hierarchical, automated, and secretless. Organizations implementing Universal Identity today are building the foundation for tomorrow's security architecture while ensuring only authorized individuals and systems can gain access to critical resources.
+**The Bottom Line:** Universal Identity proves that secretless architecture is achievable everywhere—not just in cloud-native platforms. Organizations can now implement dynamic, hierarchical, automated credential management across their entire infrastructure while solving the secret zero problem through elegant token rotation.
 
 ### Ready to Transform Your Non-Human Identity Management?
 
-**Start experimenting**: Try our [interactive demo](demo/) using `./start.sh` - choose complete workflow or individual personas
-**Learn more**: Explore our [implementation examples](demo/examples/) for your technology stack  
-**Get started**: Contact the Akeyless team to discuss your non-human identity security requirements
+**Start experimenting**: Try our [interactive demo](demo/) using `./start.sh` and experience how Universal Identity brings secretless architecture to any environment
 
 **Interactive Demo Experience**: Run `./start.sh` and choose from 7 options:
 - **🧑‍💼 Admin Setup**: Initial environment and token generation
@@ -880,8 +831,6 @@ The future of non-human identity is dynamic, hierarchical, automated, and secret
 - **📊 Show Workflow Status**: Monitor current workflow state
 - **🚪 Exit**: Complete demo session
 
-Non-human identity management is evolving toward secretless architecture. The question isn't whether to modernize—it's how quickly you can begin strengthening security and eliminating security gaps.
-
 ---
 
-*This post demonstrates the power of secretless non-human identity. Universal Identity represents the next generation of automated processes authentication, purpose-built for modern infrastructure demands and enterprise security requirements.* 
+*Universal Identity extends secretless non-human identity beyond cloud-native platforms to the 70% of infrastructure that lacks native identity mechanisms—solving the secret zero problem through elegant automatic token rotation.* 
