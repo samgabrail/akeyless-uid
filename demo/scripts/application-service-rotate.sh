@@ -19,13 +19,14 @@ if [ ! -f "$TOKEN_FILE" ]; then
     exit 1
 fi
 
-# Load current token
+# Load current token and gateway info
 source "$TOKEN_FILE"
 
 if [ -z "$UID_TOKEN" ]; then
     log "ERROR: UID_TOKEN not found in token file"
     exit 1
 fi
+
 
 log "Starting Application Service token rotation..."
 

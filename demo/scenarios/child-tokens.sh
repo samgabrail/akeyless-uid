@@ -17,15 +17,11 @@ echo ""
 
 # Check if Application Service has been provisioned with tokens
 APPLICATION_SERVICE_TOKEN_FILE="./tokens/application-service-token"
-LEGACY_TOKEN_FILE="./tokens/demo-tokens"
 
 # Support both new and legacy token files
 if [ -f "$APPLICATION_SERVICE_TOKEN_FILE" ]; then
     TOKEN_FILE="$APPLICATION_SERVICE_TOKEN_FILE"
     echo "📂 Loading Application Service tokens (deployed by Platform Engineer)..."
-elif [ -f "$LEGACY_TOKEN_FILE" ]; then
-    TOKEN_FILE="$LEGACY_TOKEN_FILE"
-    echo "📂 Loading legacy demo tokens..."
 else
     echo "❌ Application Service token file not found"
     echo ""
@@ -46,9 +42,6 @@ fi
 
 echo "✅ Application Service loaded parent UID token: ${UID_TOKEN:0:20}..."
 echo ""
-
-# Configure Application Service CLI
-akeyless configure --gateway-url "${AKEYLESS_GATEWAY:-https://api.akeyless.io}"
 
 # Step 1: View initial token tree
 echo "🌳 Step 1: Application Service initial token tree structure..."

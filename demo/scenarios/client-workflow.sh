@@ -16,15 +16,11 @@ echo ""
 
 # Check if application service has been provisioned with tokens
 APPLICATION_SERVICE_TOKEN_FILE="./tokens/application-service-token"
-LEGACY_TOKEN_FILE="./tokens/client-tokens"
 
 # Support both new and legacy token files
 if [ -f "$APPLICATION_SERVICE_TOKEN_FILE" ]; then
     TOKEN_FILE="$APPLICATION_SERVICE_TOKEN_FILE"
     echo "📂 Loading Application Service tokens (deployed by Platform Engineer)..."
-elif [ -f "$LEGACY_TOKEN_FILE" ]; then
-    TOKEN_FILE="$LEGACY_TOKEN_FILE"
-    echo "📂 Loading legacy client tokens..."
 else
     echo "❌ Application Service token file not found"
     echo ""
@@ -40,18 +36,19 @@ source "$TOKEN_FILE"
 echo "✅ Application Service provisioned with:"
 echo "   - UID Token: ${UID_TOKEN:0:20}..."
 echo "   - Access ID: $ACCESS_ID"
-echo "   - Gateway: $AKEYLESS_GATEWAY"
 echo ""
 
-# Configure Application Service CLI (no admin credentials needed)
-akeyless configure --gateway-url "$AKEYLESS_GATEWAY"
+# Application Service CLI setup (no admin credentials needed)
+echo "⚙️ Application Service ready - configuring gateway without admin credentials..."
 
 # Step 4: Application Service runs auth command using UID init token
 echo "🔐 Step 4: Application Service authenticates using admin-provided UID token..."
 echo "Command: akeyless auth --access-id '$ACCESS_ID' --access-type universal_identity --uid_token '***'"
 
 T_TOKEN_OUTPUT=$(akeyless auth --access-id "$ACCESS_ID" --access-type universal_identity --uid_token "$UID_TOKEN")
+echo "T_TOKEN_OUTPUT:" $T_TOKEN_OUTPUT
 T_TOKEN=$(echo "$T_TOKEN_OUTPUT" | grep -E "(token|Token)" | head -n1 | awk '{print $NF}')
+echo "T_TOKEN:" $T_TOKEN
 
 if [ -z "$T_TOKEN" ]; then
     echo "❌ Application Service authentication failed"
@@ -76,6 +73,7 @@ if [ $? -eq 0 ]; then
     echo "$SECRET_VALUE" | jq .
 else
     echo "❌ Failed to retrieve database secret"
+    echo "💡 This might be a permissions issue - check if the role has access to $SECRET_NAME"
 fi
 
 echo ""
@@ -101,6 +99,8 @@ sed -i "s/UID_TOKEN=.*/UID_TOKEN=$NEW_UID_TOKEN/" "$TOKEN_FILE"
 UID_TOKEN=$NEW_UID_TOKEN
 
 echo "✅ Application Service token file updated with new UID token"
+echo "📁 Persisted rotated UID token to: $TOKEN_FILE"
+echo "🔄 This ensures service can restart with valid token (no manual intervention needed)"
 echo ""
 
 # Step 9: Application Service runs auth command with new u-token
@@ -108,7 +108,7 @@ echo "🔐 Step 9: Application Service authenticates with new UID token..."
 echo "Command: akeyless auth --access-id '$ACCESS_ID' --access-type universal_identity --uid_token '***'"
 
 NEW_T_TOKEN_OUTPUT=$(akeyless auth --access-id "$ACCESS_ID" --access-type universal_identity --uid_token "$NEW_UID_TOKEN")
-NEW_T_TOKEN=$(echo "$NEW_T_TOKEN_OUTPUT" | grep -E "(token|Token)" | head -n1 | awk '{print $NF}')
+NEW_T_TOKEN=$(echo "$NEW_T_TOKEN_OUTPUT" | grep "Token:" | awk '{print $2}')
 
 if [ -z "$NEW_T_TOKEN" ]; then
     echo "❌ Authentication with new UID token failed"

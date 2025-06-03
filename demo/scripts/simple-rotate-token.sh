@@ -75,34 +75,70 @@ run_rotate() {
     # Backup current token
     cp "${TOKEN_FILE}" "${TOKEN_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
     
-    # Rotate token using the new CLI format
-    if NEW_TOKEN=$(${AKEYLESS_BIN} uid-rotate-token --uid-token "${CURRENT_TOKEN}" --format json 2>/dev/null | jq -r '.token' 2>/dev/null); then
-        if [ "${NEW_TOKEN}" != "null" ] && [ -n "${NEW_TOKEN}" ]; then
-            echo "${NEW_TOKEN}" > "${TOKEN_FILE}"
-            chmod 600 "${TOKEN_FILE}"
-            log "Token rotation successful: ${NEW_TOKEN:0:20}..."
-        else
-            log "ERROR: Token rotation returned invalid token"
-            exit 1
+    # Try rotation with JSON format first (updated CLI syntax)
+    log "Attempting rotation with JSON format..."
+    ROTATION_OUTPUT=$(${AKEYLESS_BIN} uid-rotate-token --uid-token "${CURRENT_TOKEN}" --json 2>&1)
+    ROTATION_EXIT_CODE=$?
+    
+    log "Rotation output: $ROTATION_OUTPUT"
+    
+    if [ $ROTATION_EXIT_CODE -eq 0 ] && [ "$ROTATION_OUTPUT" != "null" ] && [ -n "$ROTATION_OUTPUT" ]; then
+        # Try to parse JSON if jq is available
+        if command -v jq >/dev/null 2>&1; then
+            NEW_TOKEN=$(echo "$ROTATION_OUTPUT" | jq -r '.token' 2>/dev/null)
+            if [ "$NEW_TOKEN" != "null" ] && [ -n "$NEW_TOKEN" ]; then
+                echo "${NEW_TOKEN}" > "${TOKEN_FILE}"
+                chmod 600 "${TOKEN_FILE}"
+                log "Token rotation successful (JSON): ${NEW_TOKEN:0:20}..."
+                # Clean up old backups (keep last 3)
+                find "$(dirname "${TOKEN_FILE}")" -name "$(basename "${TOKEN_FILE}").backup.*" -type f | sort | head -n -3 | xargs rm -f 2>/dev/null || true
+                exit 0
+            fi
         fi
-    else
-        # Fallback to simple format if JSON parsing fails
-        ${AKEYLESS_BIN} uid-rotate-token --uid-token "${CURRENT_TOKEN}" > "${TOKEN_FILE}.tmp" 2>/dev/null
-        if [ -s "${TOKEN_FILE}.tmp" ]; then
-            mv "${TOKEN_FILE}.tmp" "${TOKEN_FILE}"
+        
+        # If JSON parsing failed but output exists, try to use raw output
+        if [ "$ROTATION_OUTPUT" != "null" ] && [ -n "$ROTATION_OUTPUT" ]; then
+            echo "${ROTATION_OUTPUT}" > "${TOKEN_FILE}"
             chmod 600 "${TOKEN_FILE}"
-            log "Token rotation successful (fallback method)"
-        else
-            log "ERROR: Token rotation failed"
-            rm -f "${TOKEN_FILE}.tmp"
-            exit 1
+            log "Token rotation successful (raw JSON): ${ROTATION_OUTPUT:0:20}..."
+            # Clean up old backups (keep last 3)
+            find "$(dirname "${TOKEN_FILE}")" -name "$(basename "${TOKEN_FILE}").backup.*" -type f | sort | head -n -3 | xargs rm -f 2>/dev/null || true
+            exit 0
         fi
     fi
     
-    # Clean up old backups (keep last 3)
-    find "$(dirname "${TOKEN_FILE}")" -name "$(basename "${TOKEN_FILE}").backup.*" -type f | sort | head -n -3 | xargs rm -f 2>/dev/null || true
+    # Fallback to simple format (no flags)
+    log "JSON format failed, trying simple format..."
+    ROTATION_OUTPUT=$(${AKEYLESS_BIN} uid-rotate-token --uid-token "${CURRENT_TOKEN}" 2>&1)
+    ROTATION_EXIT_CODE=$?
     
-    exit 0
+    log "Simple format output: $ROTATION_OUTPUT"
+    
+    if [ $ROTATION_EXIT_CODE -eq 0 ] && [ "$ROTATION_OUTPUT" != "null" ] && [ -n "$ROTATION_OUTPUT" ]; then
+        echo "${ROTATION_OUTPUT}" > "${TOKEN_FILE}"
+        chmod 600 "${TOKEN_FILE}"
+        log "Token rotation successful (simple): ${ROTATION_OUTPUT:0:20}..."
+        # Clean up old backups (keep last 3)
+        find "$(dirname "${TOKEN_FILE}")" -name "$(basename "${TOKEN_FILE}").backup.*" -type f | sort | head -n -3 | xargs rm -f 2>/dev/null || true
+        exit 0
+    fi
+    
+    # If all rotation attempts failed
+    log "ERROR: All token rotation attempts failed"
+    log "ERROR: Last output was: $ROTATION_OUTPUT"
+    log "ERROR: This might indicate:"
+    log "ERROR: 1. Token has expired or is invalid"
+    log "ERROR: 2. Network connectivity issues"
+    log "ERROR: 3. Gateway configuration problems"
+    log "ERROR: 4. Insufficient permissions for rotation"
+    
+    # Restore backup if rotation failed
+    if [ -f "${TOKEN_FILE}.backup.$(date +%Y%m%d_%H%M%S)" ]; then
+        log "Restoring backup token due to rotation failure"
+        mv "${TOKEN_FILE}.backup.$(date +%Y%m%d_%H%M%S)" "${TOKEN_FILE}"
+    fi
+    
+    exit 1
 }
 
 # Show current token status

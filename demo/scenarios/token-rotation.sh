@@ -17,15 +17,11 @@ echo ""
 
 # Check if Application Service has been provisioned with tokens
 APPLICATION_SERVICE_TOKEN_FILE="./tokens/application-service-token"
-LEGACY_TOKEN_FILE="./tokens/demo-tokens"
 
 # Support both new and legacy token files
 if [ -f "$APPLICATION_SERVICE_TOKEN_FILE" ]; then
     TOKEN_FILE="$APPLICATION_SERVICE_TOKEN_FILE"
     echo "📂 Loading Application Service tokens (deployed by Platform Engineer)..."
-elif [ -f "$LEGACY_TOKEN_FILE" ]; then
-    TOKEN_FILE="$LEGACY_TOKEN_FILE"
-    echo "📂 Loading legacy demo tokens..."
 else
     echo "❌ Application Service token file not found"
     echo ""
