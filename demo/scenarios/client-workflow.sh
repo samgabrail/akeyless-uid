@@ -95,7 +95,10 @@ fi
 echo "✅ Step 8: SaaS returned ACK + new u-token: ${NEW_UID_TOKEN:0:20}..."
 
 # Update Application Service token file
-sed -i "s/UID_TOKEN=.*/UID_TOKEN=$NEW_UID_TOKEN/" "$TOKEN_FILE"
+# Escape characters that could break sed replacement (e.g. "/" or "&")
+ESCAPED_NEW_UID_TOKEN=$(printf '%s\n' "$NEW_UID_TOKEN" | sed 's/[\/&]/\\&/g')
+# Use an alternate delimiter ("|") to avoid conflict with "/"
+sed -i "s|^UID_TOKEN=.*|UID_TOKEN=$ESCAPED_NEW_UID_TOKEN|" "$TOKEN_FILE"
 UID_TOKEN=$NEW_UID_TOKEN
 
 echo "✅ Application Service token file updated with new UID token"
@@ -151,4 +154,8 @@ echo ""
 echo "🔄 Ongoing Operations:"
 echo "  • Application Service can now repeat steps 4-6 for normal operations"
 echo "  • Rotation (steps 7-9) should be automated every 60 minutes"
-echo "  • No admin intervention required after initial provisioning" 
+echo "  • No admin intervention required after initial provisioning"
+
+# Mark operations as active for the interactive menu
+mkdir -p ./logs
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Application Service workflow complete" >> ./logs/rotation.log 

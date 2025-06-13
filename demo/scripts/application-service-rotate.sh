@@ -38,8 +38,9 @@ ROTATION_OUTPUT=$(akeyless uid-rotate-token --uid-token "$UID_TOKEN" 2>&1)
 NEW_TOKEN=$(echo "$ROTATION_OUTPUT" | grep -E "(ROTATED TOKEN|Token):" | sed 's/.*\[//' | sed 's/\].*//')
 
 if [ -n "$NEW_TOKEN" ] && [ "$NEW_TOKEN" != "null" ]; then
-    # Update token file
-    sed -i "s/UID_TOKEN=.*/UID_TOKEN=$NEW_TOKEN/" "$TOKEN_FILE"
+3    # Update token file safely (handle "/" or "&" in token)
+    ESCAPED_NEW_TOKEN=$(printf '%s\n' "$NEW_TOKEN" | sed 's/[\/&]/\\&/g')
+    sed -i "s|^UID_TOKEN=.*|UID_TOKEN=$ESCAPED_NEW_TOKEN|" "$TOKEN_FILE"
     log "Application Service rotation successful: ${NEW_TOKEN:0:20}..."
 else
     log "ERROR: Application Service rotation failed: $ROTATION_OUTPUT"

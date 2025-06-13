@@ -50,7 +50,7 @@ show_status() {
         echo -e "  ⭕ Deployment: Platform Engineer needed"
     fi
     
-    if [ -f "logs/rotation.log" ]; then
+    if [ -f "logs/rotation.log" ] || [ -f "logs/simple-rotation.log" ]; then
         echo -e "  ✅ Operations: Application Service active"
     else
         echo -e "  ⭕ Operations: Application Service pending"

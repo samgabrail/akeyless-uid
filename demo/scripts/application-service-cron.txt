@@ -1,5 +1,5 @@
 # Akeyless Universal Identity - Application Service Token Rotation
-# Installed by Platform Engineer on Tue Jun  3 16:33:48 EDT 2025
+# Installed by Platform Engineer on Thu Jun 12 16:48:47 EDT 2025
 # Runs every hour to rotate UID token using application-service-rotate.sh
 
 0 * * * * cd /home/sam/Development_Linux/customers/akeyless/akeyless-uid/demo && ./scripts/application-service-rotate.sh
